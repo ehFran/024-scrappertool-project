@@ -1,42 +1,71 @@
 import streamlit as st
-from playwright.sync_api import sync_playwright
-import os
+import pandas as pd
+from scrapper import Scrapper
+from downloader import Descargador
 
-st.header('Web Scraper DEF')
+# Estilos de la página
+estilos = """
+    <style>
+        .st-emotion-cache-1y4p8pa{
+        max-width: 75vw !important;
+        }
+    </style>
+"""
+st.markdown(estilos, unsafe_allow_html=True)
+descargador = Descargador()
+# Sección de descargar páginas html
+st.subheader('Descargar Página Web')
 
-pagina = st.text_input('Seleccione la página a descargar','https://www.pccomponentes.com/' )
-producto = st.text_input('Producto', 'laptop')
-numero_paginas = st.number_input('Seleccione el número de paginas a descargar', 1)
+# Campo de entrada para la URL
+pagina = st.text_input('Ingrese la URL de la página web:', '')
 
-def download_amazon_products(pagina, query, page_from=1, page_to=numero_paginas, export_location='.', user_agent=None):
-    
-    os.makedirs(export_location, exist_ok=True)
+contenido = None
 
-    with sync_playwright() as playwright:
-
-        browser = playwright.webkit.launch(headless=False, slow_mo=1000)
-
-        page = browser.new_page()
-
-        if user_agent:
-            # Set the User-Agent header
-            page.set_extra_http_headers({"User-Agent": user_agent})
-
-        for page_num in range(page_from, page_to + 1):
-            page.goto(f'{pagina}')
-            page.wait_for_load_state('load')
-
-            with open(f'{export_location}/{query}_{page_num}.html', 'w', encoding='utf-8') as f:
-                f.write(page.content())
-
-        browser.close()
-
-if __name__ == '__main__':
-    query = producto
-    export_location = './export' 
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36'
+# Botón para descargar
+if st.button('Recopilar información') and pagina:
+    contenido = descargador.descargar_web(pagina)
+    st.text('Contenido recopilado:')
+    st.text_area('Contenido:', contenido, height=400)
+    st.download_button(
+            label="Descargar Contenido",
+            data=contenido.encode('utf-8'),
+            file_name='contenido.html',
+            mime='text/html'
+        )
 
 
-if st.button('Descargar'):
-    download_amazon_products(pagina, query, page_from=1, page_to=numero_paginas, export_location=export_location, user_agent=user_agent)
+st.divider()
+
+# Sección de Scrapper
+st.subheader("Generar CSV a partir de HTML:")
+
+# Scrapper
+scrap = Scrapper()
+# Selector de perfiles
+nombres_perfiles = [perfil['Nombre'] for perfil in scrap.perfiles]
+# Selectbox
+perfil_seleccionado = st.selectbox('Selecciona un perfil:', nombres_perfiles)
+# Identifica el prefil seleccionado
+perfil = next((p for p in scrap.perfiles if p['Nombre'] == perfil_seleccionado), None)
+# Scrappea los datos usando el perfil seleccionado
+datoslist = scrap.scrap_info_product(perfil)
+
+st.divider()
+
+
+# Sección de preguntas frequentes
+st.subheader("FAQ:")
+
+with st.expander("¿Qué tipo de paginas puedo scrappear?"):
+    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+
+with st.expander("¿Qué son los perfiles?"):
+    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+
+with st.expander("¿Como añado un perfil nuevo?"):
+    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+
+with st.expander("¿Cómo funciona la aplicación?"):
+    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+
 
