@@ -56,16 +56,16 @@ st.divider()
 # Sección de preguntas frequentes
 st.subheader("FAQ:")
 
-with st.expander("¿Qué tipo de paginas puedo scrappear?"):
-    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+with st.expander("¿Cómo funciona la página?"):
+    st.write('La herramienta consta de dos partes, la primera desde, main permite descargar el código html de una web y transformarlo a csv. La segunda lee el documento csv y realiza un pequeño analisis de los productos obtenidos.')
 
 with st.expander("¿Qué son los perfiles?"):
-    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+    st.write('Los perfiles son diccionarios con las etiquetas y las clases de los productos a scrapear.')
 
 with st.expander("¿Como añado un perfil nuevo?"):
-    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+    st.write('De momento la herramienta no soporta la subida de perfiles. Esta feature se introducirá más adelante.')
 
-with st.expander("¿Cómo funciona la aplicación?"):
-    st.write('Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen Lorem ipsum dolor siet amen')
+with st.expander("¿Qué páginas puedo scrapear"):
+    st.write('De momento solo hay perfiles disponibles para PCcomponentes y CoolMood.')
 
 
